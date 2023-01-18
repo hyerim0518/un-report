@@ -75,5 +75,22 @@ full_join(co2_emissions, gapminder_data_2007)
 #writing csv
 write_csv(joined_co2_pop, file = "data/joined_co2_pop.csv")
 
+#read back in the CSV file we just wrote
+hyerim <- read_csv("data/joined_co2_pop.csv")
+hyerim%>%
+ggplot(aes(x = gdpPercap))+
+geom_histogram()
 
-  
+#co2 and gdp plots
+gdp_co2_plot<-hyerim%>%
+ggplot(aes(x = gdpPercap, y = per_capita_emissions))+
+ geom_point()+
+  geom_smooth(method = "lm", se = FALSE)+
+labs(x = "GDP Per Capita", y = "Co2 emissions per capita", title = "Comparing things")+
+theme_classic()+
+  ggpubr::stat_regline_equation(aes(label = after_stat(rr.label)))
+
+install.packages("ggpubr")
+
+ggsave(gdp_co2_plot, filename = "figures/gdp_vs_co2_plot.png",
+height = 4, width = 6, unit = "in", dpi = 300)
